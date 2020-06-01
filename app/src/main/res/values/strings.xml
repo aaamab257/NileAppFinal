@@ -1,0 +1,131 @@
+<resources>
+
+    <string name="google_maps_key">AIzaSyCgYZbebDSWkyJh49XqVe1YMDSkFBsGjUI</string>
+    <string name="app_name">Nile App</string>
+    <string name="unable_to_access_data">unable to access data</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="txt_selected">Please Select Your Account Type</string>
+    <string name="add_activity">Add Activity</string>
+    <string name="offers">Offers</string>
+    <string name="add_offers">Add Offers</string>
+    <string name="share">Share</string>
+    <string name="Connect_with_us">Connect with us</string>
+    <string name="Report_a_problem">Report a Problem</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="txt_delivery">Delivery</string>
+    <string name="txt_ordersu">Submit The Order</string>
+    <string name="txt_user">User</string>
+    <string name="sign_out">sign out</string>
+    <string name="other">other</string>
+    <string name="txt_login">Login</string>
+    <string name="email">Email</string>
+    <string name="Subject">Subject</string>
+    <string name="problem">Problem</string>
+    <string name="send">Send</string>
+    <string name="txt_email">Email</string>
+    <string name="txt_order">Your Order</string>
+    <string name="txt_ordertime">During</string>
+    <string name="txt_neworders">New Orders</string>
+    <string name="txt_time">Hr</string>
+    <string name="txt_orderlocation">Your Order Location From</string>
+    <string name="txt_orderlocationto">Your Order Location To</string>
+    <string name="txt_de">NileApp Delivery</string>
+    <string name="txt_image">Choose Image</string>
+    <string name="txt_map">Or Open Map </string>
+    <string name="call">Call</string>
+    <string name="move">Move</string>
+    <string name="chat">Chat</string>
+    <string name="txt_password">Password</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
+    <string name="txt_remember">Remember me</string>
+    <string name="txt_forgetpass">Forget Password ?</string>
+    <string name="txt_or">Or Login With</string>
+    <string name="txt_newAcc">Create New Account</string>
+    <string name="name_of_activity">Name of activity</string>
+    <string name="user_name">User Name</string>
+    <string name="governorates">Governorates</string>
+    <string name="city">City</string>
+    <string name="categories">Categories</string>
+    <string name="type_of_activity">Type of activity</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="txt_register">Registration</string>
+    <string name="gps">Please turn on the GPS for the app to work</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="txt_confirm">Confirm Password</string>
+    <string name="txt_haveacc">I have already an account</string>
+    <string name="the_data_is_loaded">The data is loaded</string>
+    <string name="facebook_app_id">848326732316104</string>
+    <string name="fb_login_protocol_scheme">fb848326732316104</string>
+
+
+    <string name="phone1">Phone 1</string>
+    <string name="phone">Phone</string>
+    <string name="phone3">Phone 3</string>
+    <string name="whatsapp">WhatsApp</string>
+
+
+    <string name="Make_sure_the_phone_number_is_correct">Make sure the phone number is correct</string>
+    <string name="error">error</string>
+
+
+    <string name="phone_number" translatable="false">Phone Number</string>
+    <string name="generate_otp" translatable="false">Generate OTP</string>
+    <string name="enter_otp" translatable="false">Enter OTP</string>
+    <string name="verify_sign_in" translatable="false">Verify and Sign In</string>
+
+    <string name="passowrd">Password</string>
+    <string name="login">LOG IN</string>
+    <string name="show_pwd">Show Password</string>
+    <string name="hide_pwd">Hide Password</string>
+    <string name="forgot">Forgot password?</string>
+    <string name="closebutton">Close Button for Activity</string>
+    <string name="newUser">Not a Member yet? Sign Up here.</string>
+    <string name="fullName">Full Name</string>
+    <string name="mobileNumber">Mobile Number</string>
+    <string name="location">Location</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="terms_conditions">By clicking SignUp you agree all the Terms and Conditions.</string>
+    <string name="conditions">Terms and Conditions</string>
+
+    <string name="signUpRestored">SIGN UP/Recover your account</string>
+    <string name="signUp">SIGN UP</string>
+    <string name="already_user">Already have Account? Login here.</string>
+    <string name="registered_emailid">Please enter your Registered Email Id below:</string>
+    <string name="submit">SUBMIT</string>
+    <string name="back">BACK</string>
+    <string name="continue_registration">Continue registration</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+
+    <string name="incorrect_phone_number">incorrect phone number</string>
+    <string name="other_than_zero_at_the_beginning">Enter your number other than 0 at the beginning</string>
+    <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="logged_in_successfully">Logged in successfully</string>
+    <string name="successfully_registered">successfully registered</string>
+    <string name="please_accept_the_terms_and_conditions">Please accept the terms and conditions</string>
+    <string name="account_has_been_restored"> Your account has been restored</string>
+    <string name="please_check_your_internet_connection">Please check your internet connection</string>
+    <string name="internet_connection_restored">Internet connection restored</string>
+    <string name="all_fields_are_required">All fields are required</string>
+
+    <string name="new_version">New update includes new features for you</string>
+    <string name="update">UPDATE</string>
+    <string name="dont_show">Don\'t show again</string>
+
+    <!--conditions -->
+
+    <string name="c1">*When you use the application, you agree to give us powers to use the information through which the appropriate service can be provided and to develop and update the application for ease of use.</string>
+    <string name="c2">*The idea of the application is based on making activities information available to users and therefore we provide public services and not personal or private data that would harm the user or the owner of the activity.</string>
+    <string name="c3">*What is requested when adding an activity is only 1-the activity\'s website for easy access and selection from among the existing activities 2- the name of the activity to facilitate research on it 3- the activity category in order to organize the activities and put the specific activity in the appropriate category 4- number to communicate in order to inquire or book an appointment Or ask about a product, etc.</string>
+    <string name="c4">*The data required to register the commercial activity leads to the ease of access to the activity and the widening of the customer base of the activity and thus the increase in sales or services, and this also helps us to increase the number of users for the application and thus serve a larger base of people.</string>
+    <string name="c5">*What is displayed to the user is the name of the activity, the category, the location of the activity and the contact number, if any, that is, what was listed by the owner of the activity and only.</string>
+    <string name="c6">*When you use the application, whether a user is searching for an activity or an activity owner and you want to add this activity, you agree to the terms of the application and privacy policy.</string>
+    <string name="c7">*Any violation of the application policy, inconvenience to the owner of the activity, or false information is recorded that would expose your account to being closed and not to use the application again.</string>
+    <string name="c8">*In the event that you object to the application as a user or business owner, please inform us through the application about the object of the objection or in the case of providing advice or assistance.</string>
+    <string name="c9">*In the event of non-response through the application and your objection to the application or its related matter still exists, you have the right and only to leave the application and not use it again and you have no right to any other method of objection.</string>
+    <string name="title_activity_map_activty">Map</string>
+
+
+</resources>

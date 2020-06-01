@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@drawable/bordercity"
+    android:orientation="horizontal"
+    android:minHeight="160dp"
+    android:weightSum="1">
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+  <TextView
+      android:id="@+id/city"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="20dp"
+      android:layout_marginTop="25dp"
+      android:layout_marginLeft="10dp"
+      android:layout_alignParentLeft="true"
+      android:layout_alignParentStart="true"
+      android:textStyle="bold"
+      android:text="text"
+      android:textAlignment="gravity" />
+
+
+  <com.makeramen.roundedimageview.RoundedImageView
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:layout_width="30dp"
+      android:layout_height="30dp"
+      android:layout_marginTop="25dp"
+      android:layout_marginLeft="10dp"
+      android:layout_alignParentEnd="true"
+      android:padding="4dp"
+      android:id="@+id/imageView"
+      android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
+      android:scaleType="fitXY"
+      app:riv_corner_radius="12dip"
+      app:riv_border_width="2dip"
+      app:riv_border_color="#333333"
+      app:riv_mutate_background="true"
+      android:layout_alignParentRight="true" />
+
+
+</RelativeLayout>
+
+
+
+</LinearLayout>

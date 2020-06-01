@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+
+     <!--
+        <item
+            android:id="@+id/nav_item_one"
+            android:title="@string/add_activity" />
+-->
+        <!--
+         android:icon="@drawable/counter"
+            android:title="@string/my_publications"
+            -->
+
+        <!--
+
+        <item
+            android:id="@+id/nav_item_two"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:title="@string/offers" />
+        <item
+            android:id="@+id/nav_item_three"
+            android:title="@string/add_offers" />
+            -->
+
+    </group>
+
+
+    <group android:id="@+id/group_menu">
+        <item
+            android:id="@+id/nav_item_four"
+            android:title="@string/share" />
+
+        <item
+            android:id="@+id/nav_item_five"
+            android:title="@string/Connect_with_us" />
+        <item
+            android:id="@+id/nav_item_six"
+            android:title="@string/Report_a_problem" />
+    </group>
+
+
+
+
+
+</menu>

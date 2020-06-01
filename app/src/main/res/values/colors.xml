@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="colorPrimary">#339fff</color>
+    <color name="colorPrimaryDark">#3270a7</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="n1">#7B1FA2</color>
+    <color name="n2"> #99CC00</color>
+    <color name="n3">#4A312A</color>
+    <color name="n4">#FF9800</color>
+    <color name="n5">#FFFFFF</color>
+    <color name="n6">#201f1f</color>
+    <color name="n7" tools:ignore="MissingDefaultResource">#FF6347</color>
+    <color name="n8">#FF4500</color>
+    <color name="n11">#07475D</color>
+    <color name="n9">#339fff</color>
+    <color name="grey">#FFEEEEEE</color>
+    <color name="n10">#F4F4F4</color>
+
+    <color name="background_color">#009688</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="white_greyish">#EEEEEE</color>
+    <color name="button_selectorcolor">#9E9E9E</color>
+
+    <color name="light_grey">#cccccc</color>
+    <color name="transparent">#80FFFFFF</color>
+    <color name="colorBtn">#702283</color>
+    <color name="textview"> #FF757575</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+</resources>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuthPhone">
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:id="@+id/imageView2"
+            android:src="@drawable/nileapp"
+            android:scaleType="fitXY"
+            app:riv_corner_radius="0dip"
+            app:riv_border_width="0dip"
+            app:riv_border_color="#333333"
+            android:visibility="visible"
+            app:riv_mutate_background="true" />
+
+        <TextView
+            android:id="@+id/enterphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:drawablePadding="8dp"
+            android:text="الرجاء أدخل رقم موبايلك للتحقق منه"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/li"
+            android:layout_margin="20dp"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+
+
+
+            <TextView
+                android:id="@+id/mobileCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/border_edit"
+                android:drawablePadding="8dp"
+                android:hint="+2"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textColor="@color/n9"
+                android:textColorHint="@color/n9"
+                android:textSize="16sp" />
+
+
+            <EditText
+                android:id="@+id/et_phone_number"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginTop="5dp"
+                android:cursorVisible="true"
+                android:drawablePadding="8dp"
+                android:inputType="phone"
+                android:maxLength="25"
+                android:hint="أدخل رقم الموبايل"
+                android:padding="10dp"
+                android:background="@drawable/border_edit"
+                android:singleLine="true"
+                android:textColor="@color/n9"
+                android:textColorHint="@color/light_grey"
+                android:textSize="16sp"
+                android:autofillHints=""
+                tools:targetApi="o" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_generate_otp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="إرسال"
+            android:background="@drawable/btncall"
+            android:textColorHint="@color/white"
+            android:textColor="@color/n9"
+            android:layout_margin="20dp"/>
+
+    </LinearLayout>
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

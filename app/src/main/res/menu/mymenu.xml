@@ -1,0 +1,45 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--
+
+    <item android:id="@+id/menuSearch"
+        android:orderInCategory="2"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="end"/>
+-->
+
+    <item
+        android:id="@+id/add"
+        android:icon="@drawable/backgroundadd"
+        android:orderInCategory="1"
+        android:title="إضافة"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/chatRooms"
+        android:orderInCategory="1"
+        android:title="المحادثات"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_message" />
+    <!--
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:orderInCategory="100"
+        android:title="search"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
+-->
+
+
+</menu>

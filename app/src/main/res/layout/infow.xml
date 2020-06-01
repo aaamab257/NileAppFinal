@@ -1,0 +1,169 @@
+<LinearLayout android:id="@+id/info"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:background="#00555555"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:weightSum="100"
+    android:visibility="visible"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/round_layout_otp"
+        android:orientation="vertical"
+        android:padding="3dp"
+        android:weightSum="100">
+
+        <!--
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="60"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="80"
+                android:gravity="center">
+
+
+                <ImageView
+                    android:id="@+id/a"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="#DA5F6A"
+                    android:gravity="center"
+                    android:scaleType="fitCenter" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="20">
+
+                <TextView
+                    android:id="@+id/txt_file_path"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="82dp"
+                    android:layout_marginRight="82dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="مكتبة"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+-->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:background="@drawable/round_layout_white_otp"
+            android:orientation="vertical"
+            android:weightSum="100">
+
+            <ImageView
+                android:id="@+id/close"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/close"
+                android:gravity="center"
+                android:src="@drawable/ic_close_black_24dp"
+                android:scaleType="fitCenter" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="60">
+
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="مكتبة أسوان النموذجية"
+                    android:textColor="#ff000000"
+                    android:background="@drawable/borderh"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="40"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="50"
+                    android:gravity="center|right">
+
+                    <Button
+                        android:id="@+id/btn_cancel"
+                        android:layout_width="80dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/round_button"
+                        android:gravity="center"
+                        android:onClick="move"
+                        android:text="@string/move"
+                        android:textSize="13dp"
+                        android:textStyle="bold"
+                        android:textColor="#ffffffff" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="50"
+                    android:gravity="center|left">
+
+
+                    <Button
+                        android:id="@+id/btn_call"
+                        android:layout_width="80dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/btncall"
+                        android:text="@string/call"
+                        android:onClick="call"
+                        android:textSize="13dp"
+                        android:textStyle="bold"
+                        android:textColor="#ffffffff" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+

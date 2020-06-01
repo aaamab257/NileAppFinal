@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">نايل آب</string>
+    <string name="unable_to_access_data">تعذر الوصول للبيانات</string>
+    <string name="open">فتح</string>
+    <string name="close">إغلاق</string>
+    <string name="txt_selected">من فضلك قم بأختيار نوع الحساب</string>
+    <string name="add_activity">إضافة نشاط</string>
+    <string name="offers">العروض</string>
+    <string name="add_offers">إضافة عرض</string>
+    <string name="share">المشاركة</string>
+    <string name="Connect_with_us">إتصل بنا</string>
+    <string name="Report_a_problem">الإبلاغ عن مشكله</string>
+    <string name="edit_profile">تعديل الصفحة الشخصية</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="other">آخرى</string>
+    <string name="txt_delivery">مندوب</string>
+    <string name="txt_user">مستخدم</string>
+    <string name="email">الإيميل</string>
+    <string name="Subject">الموضوع</string>
+    <string name="problem">المشكله</string>
+    <string name="send">إرسال</string>
+
+    <string name="call">إتصال</string>
+    <string name="move">إنتقال</string>
+    <string name="chat">مراسلة</string>
+    <string name="done">تم</string>
+    <string name="cancel">إلغاء</string>
+
+
+    <string name="name_of_activity">إسم النشاط</string>
+    <string name="user_name">إسم المستخدم</string>
+    <string name="governorates">المحافظات</string>
+    <string name="city">المدينة</string>
+    <string name="categories">الفئات</string>
+    <string name="type_of_activity">نوع النشاط</string>
+    <string name="mobile_number">رقم المحمول</string>
+
+    <string name="gps">الرجاء تشغيل الـGPS من أجل أن يعمل التطبيق</string>
+    <string name="yes">موافق</string>
+    <string name="no">لا</string>
+
+
+
+
+    <string name="the_data_is_loaded">يتم تحميل البيانات</string>
+
+
+    <string name="phone1">موبايل 1</string>
+    <string name="phone">موبايل</string>
+    <string name="phone3">موبايل 3</string>
+    <string name="whatsapp">واتساب</string>
+
+
+    <string name="Make_sure_the_phone_number_is_correct">تأكد من أن رقم الموبايل صحيح</string>
+
+    <string name="error">خطأ</string>
+
+
+    <string name="passowrd">كلمة السر</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="show_pwd">إظهار كلمة السر</string>
+    <string name="hide_pwd">إخفاء كلمة السر</string>
+    <string name="forgot">نسيت كلمة السر؟</string>
+    <string name="closebutton">زر إغلاق للنشاط</string>
+    <string name="newUser">لست عضوا حتى الآن؟ سجل هنا.</string>
+    <string name="fullName">الإسم الكامل</string>
+    <string name="mobileNumber">رقم الجوال</string>
+    <string name="location">الموقع</string>
+    <string name="confirmPassword">تأكيد كلمة المرور</string>
+    <string name="terms_conditions">بالنقر فوق تسجيل ، أنت توافق على جميع الشروط والأحكام.</string>
+    <string name="conditions">الأحكام والشروط</string>
+    <string name="signUpRestored">تسجيل حساب جديد/إستعادة حسابك</string>
+    <string name="signUp">تسجيل حساب جديد</string>
+    <string name="already_user">هل لديك حساب بالفعل؟ تسجيل الدخول هنا.</string>
+    <string name="registered_emailid">الرجاء إدخال معرف البريد الإلكتروني المسجل أدناه:</string>
+    <string name="submit">تقديم</string>
+    <string name="back">رجوع</string>
+    <string name="continue_registration">متابعة التسجيل</string>
+    <string name="enter_mobile_number">أدخل رقم موبايلك</string>
+
+    <string name="incorrect_phone_number">لقد أدخلت رقم موبايل غير صحيح</string>
+    <string name="other_than_zero_at_the_beginning">أدخل رقمك من غير رقم 0 في البداية</string>
+    <string name="enter_your_phone_number">أدخل رقم موبايلك</string>
+    <string name="logged_in_successfully">تم تسجيل الدخول بنجاح</string>
+    <string name="successfully_registered">تم التسجيل بنجاح</string>
+    <string name="please_accept_the_terms_and_conditions">الرجاء الموافقة على الشروط والبنود</string>
+    <string name="account_has_been_restored">تم إستعادة حسابك</string>
+    <string name="please_check_your_internet_connection">الرجاء التحقق من إتصالك بالإنترنت</string>
+    <string name="internet_connection_restored">تم إستعادة الإتصال بالإنترنت</string>
+    <string name="all_fields_are_required">كل الحقول مطلوبة</string>
+
+    <string name="new_version">تحديث جديد يشمل مميزات جديده من اجلك</string>
+    <string name="update">تحديث</string>
+    <string name="dont_show">لا تظهر مرة أخرى</string>
+
+    <!--conditions -->
+
+    <string name="c1">*عند استخدامك للتطبيق , فانت توافق علي اعطائنا الصلاحيات لاستخدام المعلومات التي من خلالها يمكن تقديم الخدمة المناسبة وتطوير وتحديث التطبيق من اجل سهولة الاستخدام.</string>
+    <string name="c2">*تقوم فكرة التطبيق علي اتاحة معلومات الانشطة للمستخدمين وبالتالي نحن نقدم خدمات عامة وليست بيانات شخصية او خاصة من شأنها ضرر للمستخدم او صاحب النشاط.</string>
+    <string name="c3">*ما يتم طلبه عند اضافة النشاط هو فقط 1-موقع النشاط لسهولة الوصول اليه واختياره من ضمن الانشطة الموجودة 2- اسم النشاط لتسهيل البحث عليه 3- فئة النشاط وذلك لتنظيم الانشطة ووضع النشاط المعين في الفئة المناسبة 4- رقم للتواصل من اجل الاستفسار او حجز موعد او السؤال عن منتج من المنتجات,,, الخ.</string>
+    <string name="c4">*تؤدي البيانات المطلوبة لتسجيل النشاط التجاري لسهولة الوصول للنشاط واتساع قاعدة العملاء لدي النشاط وبالتالي زيادة المبيعات او الخدمات وذلك يساعدنا ايضا علي زيادة عدد المستخدمين للتطبيق وبالتالي خدمة قاعدة اكبر من الناس.</string>
+    <string name="c5">*ما يتم عرضه للمستخدم هو اسم النشاط والفئة وموقع النشاط ورقم التواصل ان وجد , اى ما تم ادراجه من قبل صاحب النشاط وفقط.</string>
+    <string name="c6">*عند استخدامك للتطبيق سواء مستخدم تبحث عن نشاط او صاحب نشاط وتريد اضافة هذا النشاط , فانت توافق علي شروط التطبيق وسياسة الخصوصية.</string>
+    <string name="c7">*اي مخالفة لسياسة التطبيق او ازعاج لصاحب النشاط او معلومات خاطئة يتم تسجيلها من شانها ان تعرض حسابك للاغلاق وعدم استعمال التطبيق مرة اخرى.</string>
+    <string name="c8">*في حال اعتراضك على التطبيق كمستخدم او صاحب نشاط يرجي ابلاغنا عن طريق التطبيق عن وجه الاعتراض او في حالة تقديم النصح او المساعدة.</string>
+    <string name="c9">*في حال عدم الاستجابة من خلال التطبيق وما زال اعتراضك على التطبيق او ما يخصه موجود , فلك الحق وفقط في الخروج من التطبيق وعدم استعماله مرة اخري وليس لك الحق في اى وسيلة اخري للاعتراض.</string>
+    //txt_login
+    <string name="txt_login">تسجيل الدخول</string>
+    <string name="txt_email">البريد الالكترونى</string>
+    <string name="txt_order">قم بأدخال الطلب</string>
+    <string name="txt_de">خدمة التوصيل</string>
+    <string name="txt_image">قم بأختيار صورة للطلب</string>
+    <string name="txt_ordersu">ارسال الطلب</string>
+    <string name="txt_map">قم بالاختيار من الخريطة</string>
+    <string name="txt_ordertime">خلال</string>
+    <string name="txt_neworders">طلبات جديدة</string>
+    <string name="txt_time">ساعة</string>
+    <string name="txt_orderlocation">تحديد موقع استلام الطلب ( اختيارى )</string>
+    <string name="txt_orderlocationto">تحديد موقع تسليم الطلب</string>
+    <string name="txt_password">كلمة المرور</string>
+    <string name="txt_remember">تذكرنى</string>
+    <string name="txt_forgetpass">نسيت كلمة السر</string>
+    <string name="txt_or">او قم بالتسجيل عن طريق</string>
+    <string name="txt_newAcc">تسجيل حساب جديد</string>
+    <string name="txt_register">تسجيل حساب جديد</string>
+    <string name="txt_confirm">تأكيد كلمة السر</string>
+    <string name="txt_haveacc">لديك حساب بالفعل</string>
+    <string name="facebook_app_id">848326732316104</string>
+    <string name="fb_login_protocol_scheme">fb848326732316104</string>
+
+</resources>

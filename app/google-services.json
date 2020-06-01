@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "503916030392",
+    "firebase_url": "https://nileapp-260713.firebaseio.com",
+    "project_id": "nileapp-260713",
+    "storage_bucket": "nileapp-260713.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503916030392:android:3e585c08e86756da19874d",
+        "android_client_info": {
+          "package_name": "com.swadallail.nileapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "503916030392-mh2gr4e470sojn5pgs3o5k93rr1rjk9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swadallail.nileapp",
+            "certificate_hash": "72583208c59ba86edd46eb1c37fe985886c73a0b"
+          }
+        },
+        {
+          "client_id": "503916030392-vurgrlvc1v8k0kki1jg915h58maadvnf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.swadallail.nileapp",
+            "certificate_hash": "9cf314cb0b8eee95afb7a53d1990ba8a8414a0aa"
+          }
+        },
+        {
+          "client_id": "503916030392-ifji74ovlql1aphe4cg8df7sol4bug6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgYZbebDSWkyJh49XqVe1YMDSkFBsGjUI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "503916030392-ifji74ovlql1aphe4cg8df7sol4bug6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
