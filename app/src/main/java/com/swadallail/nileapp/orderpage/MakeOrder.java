@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.swadallail.nileapp.MainActivity;
 import com.swadallail.nileapp.Map.MapActivty;
 import com.swadallail.nileapp.R;
 import com.swadallail.nileapp.data.MainResponse;
@@ -52,7 +53,7 @@ public class MakeOrder extends AppCompatActivity {
     MyClick handlers;
     Bitmap user_imgn;
     ProgressDialog dialog;
-    int LAUNCH_MAP_FROM = 1;
+    int LAUNCH_MAP_FROM = 4;
     int LAUNCH_MAP_TO = 3;
     double latFrom = 0.0 , latTo = 0.0, lngFrom= 0.0 , lngTo= 0.0;
     String encodedImage ;
@@ -63,7 +64,6 @@ public class MakeOrder extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_make_order);
         handlers = new MyClick(this);
         binding.setHandlers(handlers);
-
     }
 
     public class MyClick {
@@ -84,7 +84,12 @@ public class MakeOrder extends AppCompatActivity {
         public void plus(View view) {
             int i = Integer.parseInt(binding.txtTime.getText().toString());
             int f = i + 1;
-            binding.txtTime.setText(String.valueOf(f));
+            if(f > 6){
+                Toast.makeText(MakeOrder.this, "الحد الأقصى لعدد الساعات 6 ساعات", Toast.LENGTH_SHORT).show();
+            }else {
+                binding.txtTime.setText(String.valueOf(f));
+            }
+
         }
 
         public void min(View view) {
@@ -191,7 +196,6 @@ public class MakeOrder extends AppCompatActivity {
                 lngFrom = data.getDoubleExtra("lng",0);
                 Log.e("LatFrom","" +latFrom);
                 Log.e("LngFrom",""+lngFrom);
-                binding.edLocationfrom.setText("تم تحديد الموقع على الخريطة");
             }
         } else if (requestCode == LAUNCH_MAP_TO) {
             if (resultCode == RESULT_OK) {
@@ -200,7 +204,6 @@ public class MakeOrder extends AppCompatActivity {
                 lngTo = data.getDoubleExtra("lng",0);
                 Log.e("Latto","" +latTo);
                 Log.e("Lngto",""+lngTo);
-                binding.edOrderlocationto.setText("تم تحديد الموقع على الخريطة");
             }
         } else if (requestCode == GALLERY) {
             if (data != null) {
@@ -239,37 +242,44 @@ public class MakeOrder extends AppCompatActivity {
 
         String fromAddress = binding.edLocationfrom.getText().toString();
         String tpAddress = binding.edOrderlocationto.getText().toString();
-        dialog = new ProgressDialog(MakeOrder.this);
-        dialog.setMessage(getApplicationContext().getResources().getString(R.string.the_data_is_loaded));
-        dialog.show();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://nileapp-001-site3.itempurl.com/api/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ApiInterface userclient = retrofit.create(ApiInterface.class);
-        String to = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYUBhLmNvbSIsInN1YiI6ImFAYS5jb20iLCJqdGkiOiI2YTY3YmY5OS05MzI5LTQ2YTMtYmM3YS01MTkwZDkwZWMxZTAiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAyN2Y2MWJiLWFlNzUtNGE2Yy04YWY4LWE5MDcyNmFlM2IyOCIsIlVzZXJJZCI6IjAyN2Y2MWJiLWFlNzUtNGE2Yy04YWY4LWE5MDcyNmFlM2IyOCIsImV4cCI6MTU5MzU0Njg0OCwiaXNzIjoiUmF6TmV0LmNvbSIsImF1ZCI6IlJhek5ldC5jb20ifQ.vdwngQGM09gniKq-tYutzax3frAiszqjHFDlE3uXhYo";
-        OrderBody body = new OrderBody(encodedImage,order,String.valueOf(latFrom),String.valueOf(lngFrom),String.valueOf(latTo),String.valueOf(lngTo),time,fromAddress,tpAddress);
-        Call<MainResponse<OrderResponse>> call = userclient.UploadOrder("Bearer "+to ,body);
-        //SharedHelper.getKey(MakeOrder.this , "token")
-        call.enqueue(new Callback<MainResponse<OrderResponse>>() {
-            @Override
-            public void onResponse(Call<MainResponse<OrderResponse>> call, Response<MainResponse<OrderResponse>> response) {
-                dialog.dismiss();
-                Log.e("Done",""+response.body());
-                if(response.body() != null){
-                    Toast.makeText(MakeOrder.this, "تم ارسال الطلب بنجاح الرجاء انتظار الرد", Toast.LENGTH_SHORT).show();
+        if(tpAddress.isEmpty()){
+            Toast.makeText(this, "قم بأدخال عنوان الاستلام", Toast.LENGTH_SHORT).show();
+        }else if (order.isEmpty()){
+            Toast.makeText(this, "قم بأدخال الطلب", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            dialog = new ProgressDialog(MakeOrder.this);
+            dialog.setMessage(getApplicationContext().getResources().getString(R.string.the_data_is_loaded));
+            dialog.show();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://test.nileappco.com/api/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            ApiInterface userclient = retrofit.create(ApiInterface.class);
+            String to = "Bearer "+SharedHelper.getKey(MakeOrder.this , "token");
+            OrderBody body = new OrderBody(encodedImage,order,String.valueOf(latFrom),String.valueOf(lngFrom),String.valueOf(latTo),String.valueOf(lngTo),time,fromAddress,tpAddress);
+            Call<MainResponse<OrderResponse>> call = userclient.UploadOrder(to ,body);
+            call.enqueue(new Callback<MainResponse<OrderResponse>>() {
+                @Override
+                public void onResponse(Call<MainResponse<OrderResponse>> call, Response<MainResponse<OrderResponse>> response) {
+                    dialog.dismiss();
+                    Log.e("Done",""+response.body());
+                    if(response.body() != null){
+                        Toast.makeText(MakeOrder.this, "تم ارسال الطلب بنجاح الرجاء انتظار الرد", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MakeOrder.this , MainActivity.class));
+                        finish();
+                    }
                 }
 
+                @Override
+                public void onFailure(Call<MainResponse<OrderResponse>> call, Throwable t) {
+                    dialog.dismiss();
+                    Toast.makeText(MakeOrder.this, "هناك خطأ الرجاء المحاولة مرة اخرى", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
-            }
-
-            @Override
-            public void onFailure(Call<MainResponse<OrderResponse>> call, Throwable t) {
-                dialog.dismiss();
-                Toast.makeText(MakeOrder.this, "هناك خطأ الرجاء المحاولة مرة اخرى", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

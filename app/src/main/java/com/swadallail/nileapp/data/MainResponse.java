@@ -11,4 +11,6 @@ public class MainResponse<T> {
     public String message;
     @SerializedName("statusCode")
     public int statusCode;
+    @SerializedName("errors")
+    public String errors;
 }

@@ -4,6 +4,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,17 +21,21 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.swadallail.nileapp.R;
 
-public class MapActivty extends FragmentActivity implements OnMapReadyCallback {
+import java.util.List;
+
+public class MapActivty extends FragmentActivity implements OnMapReadyCallback, LocationListener {
 
     private GoogleMap mMap;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -39,6 +44,8 @@ public class MapActivty extends FragmentActivity implements OnMapReadyCallback {
     private Location mLocation;
     private LocationRequest mLocationRequest;
     private LocationManager mLocationManager;
+    private LocationSource.OnLocationChangedListener mListener;
+    private LocationManager locationManager;
     private LocationSettingsRequest mLocationSettingsRequest;
     double lat = 0.0, lng = 0.0;
     Button done;
@@ -47,6 +54,7 @@ public class MapActivty extends FragmentActivity implements OnMapReadyCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_activty);
+
         if (mMap == null) {
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
@@ -74,7 +82,18 @@ public class MapActivty extends FragmentActivity implements OnMapReadyCallback {
         mMap.getUiSettings().setIndoorLevelPickerEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(true);
+        Location myLocation = getLastKnownLocation();
+        double   currentLat = myLocation.getLatitude();
+        double  currentLong =  myLocation.getLongitude();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLat, currentLong), 12.0f));
+        /*double mlat = googleMap.getMyLocation().getLatitude() ;
+        double mlng = googleMap.getMyLocation().getLongitude();
+        */
 
+
+
+        /*Location myLocation = mMap.getMyLocation();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), 16));*/
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -86,6 +105,7 @@ public class MapActivty extends FragmentActivity implements OnMapReadyCallback {
                 // Clears the previously touched position
                 mMap.clear();
                 // Animating to the touched position
+
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
                 // Placing a marker on the touched position
@@ -162,4 +182,30 @@ public class MapActivty extends FragmentActivity implements OnMapReadyCallback {
         return (res == PackageManager.PERMISSION_GRANTED);
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 20.0f));
+        //Move the camera to the user's location and zoom in!
+
+    }
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            @SuppressLint("MissingPermission") Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+
+
+        return bestLocation;
+
+    }
 }

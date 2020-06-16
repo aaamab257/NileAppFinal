@@ -55,40 +55,35 @@ public class RegisterAuthActivity extends AppCompatActivity {
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
-            String email  = binding.edEmail.getText().toString();
+            String email = binding.edEmail.getText().toString();
             String pass = binding.edPassword.getText().toString();
             String conpass = binding.edConfirmPass.getText().toString();
-            if(email.isEmpty() || pass.isEmpty() || conpass.isEmpty()){
+            if (email.isEmpty() || pass.isEmpty() || conpass.isEmpty()) {
                 Toast.makeText(RegisterAuthActivity.this, "املأ الخانات الفارغة", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-            }else if(pass.length() < 6 ){
+            } else if (pass.length() < 6) {
                 Toast.makeText(RegisterAuthActivity.this, "كلمة المرور يجب ان تكون اكبر من 6 حروف او ارقام", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-            }
-            else if(! conpass.equals(pass)){
+            } else if (!conpass.equals(pass)) {
                 Toast.makeText(RegisterAuthActivity.this, "كلمة المرور غير متطابقة", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
-            }
-            else
-                {
+            } else {
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://nileapp-001-site3.itempurl.com/api/User/")
+                        .baseUrl("https://test.nileappco.com/api/User/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 ApiInterface userclient = retrofit.create(ApiInterface.class);
-                UserRegister userRegister = new UserRegister(email, pass , conpass , "0");
+                //Toast.makeText(RegisterAuthActivity.this, email + pass, Toast.LENGTH_SHORT).show();
+                UserRegister userRegister = new UserRegister(email, pass, conpass);
                 Call<MainResponse<UserRegisterResponse>> call = userclient.RegisterUser(userRegister);
                 call.enqueue(new Callback<MainResponse<UserRegisterResponse>>() {
                     @Override
                     public void onResponse(Call<MainResponse<UserRegisterResponse>> call, Response<MainResponse<UserRegisterResponse>> response) {
-                        if(response.body() != null){
-                            if (response.body().success){
-                                //String userID =  response.body().data.getId();
-                                Toast.makeText(RegisterAuthActivity.this, "تم انشاء الحساب بنجاح", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(RegisterAuthActivity.this , LoginAuthActivity.class));
-                                finish();
-                                dialog.dismiss();
-                            }
+                        if (response.body() != null) {
+                            Toast.makeText(RegisterAuthActivity.this, "تم انشاء الحساب بنجاح", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(RegisterAuthActivity.this, LoginAuthActivity.class));
+                            finish();
+                            dialog.dismiss();
                         }
 
 

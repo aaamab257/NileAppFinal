@@ -13,6 +13,41 @@
         android:orientation="vertical"
         android:layout_margin="8dp"
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:visibility="visible"
+            android:layout_marginTop="8dp"
+            >
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="رقم الطلب"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                />
+
+            <TextView
+                android:id="@+id/txt_orderid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="50"
+                android:layout_weight="0.5"
+                android:textAlignment="center"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorBtn"
+            android:layout_marginTop="3dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,15 +65,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="احمد"
+                android:maxLines="1"
                 android:id="@+id/txt_name"
                 android:layout_weight="0.8"
                 />
             <RatingBar
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.7"
+                android:layout_weight="0.6"
                 style="@style/Widget.AppCompat.RatingBar.Small"
                 android:numStars="5"
+                android:id="@+id/rate"
                 android:layout_gravity="center"
                 />
             <TextView
@@ -47,6 +84,7 @@
                 android:text="3.9"
                 android:layout_weight="0.4"
                 android:textAlignment="center"
+                android:id="@+id/rate_num"
                 />
         </LinearLayout>
         <LinearLayout
@@ -85,6 +123,7 @@
                 android:text="5 KM"
                 android:textAlignment="center"
                 android:layout_weight="0.3"
+                android:id="@+id/loc_from"
                 />
             <LinearLayout
                 android:layout_width="0dp"
@@ -113,6 +152,7 @@
                 android:text="5 KM"
                 android:textAlignment="center"
                 android:layout_weight="0.3"
+                android:id="@+id/loc_to"
                 />
             <LinearLayout
                 android:layout_width="0dp"
@@ -157,6 +197,8 @@
                 android:text="الطلب"
                 android:layout_weight="2.2"
                 android:textAlignment="center"
+                android:maxLines="1"
+                android:id="@+id/ordertext"
                 />
         </LinearLayout>
         <LinearLayout
@@ -186,6 +228,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="1"
+                android:id="@+id/hours"
                 android:layout_weight="0.3"
                 android:textAlignment="center"
                 />
@@ -225,6 +268,8 @@
                 android:layout_height="wrap_content"
                 android:hint="10"
                 android:inputType="number"
+                android:id="@+id/ed_price"
+                android:maxLength="3"
                 android:layout_weight="0.5"
                 android:textAlignment="center"
                 />
@@ -239,9 +284,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="ارسال"
+                android:id="@+id/send_offer"
                 android:layout_gravity="center"
                 android:layout_weight="0.8"
                 />
         </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

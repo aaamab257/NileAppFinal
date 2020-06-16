@@ -148,7 +148,6 @@
                                 android:layout_width="0dp"
                                 android:textColor="#000"
                                 android:id="@+id/ch_rememberme"
-                                android:onClick="@{handlers.rememberme}"
                                 android:layout_height="wrap_content"
                                 android:text="@string/txt_remember"/>
                             <TextView
@@ -157,7 +156,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="end"
                                 android:id="@+id/forget_pass"
-                                android:onClick="@{handlers.forgetpassword}"
+                                android:onClick="@{handlers::forgetpassword}"
                                 android:textColor="#000"
                                 android:text="@string/txt_forgetpass"/>
                         </LinearLayout>
@@ -178,9 +177,22 @@
                             android:layout_marginStart="13dp"
                             android:layout_marginEnd="13dp"
                             android:id="@+id/btn_createnew"
-                            android:layout_marginBottom="15dp"
-                            android:onClick="@{handlers.gotoregister}"
+                            android:layout_marginBottom="13dp"
+                            android:onClick="@{handlers::gotoregister}"
                             android:text="@string/txt_newAcc"
+                            android:textColor="@color/colorBtn"
+                            />
+                        <Button
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="#DECBE2"
+                            android:layout_marginStart="13dp"
+                            android:layout_marginEnd="13dp"
+                            android:id="@+id/btn_phone"
+                            android:layout_marginBottom="15dp"
+                            android:onClick="@{handlers::phonelogin}"
+                            android:text="التسجيل برقم الهاتف"
+                            android:visibility="gone"
                             android:textColor="@color/colorBtn"
                             />
                         <TextView
@@ -207,7 +219,7 @@
                                 android:layout_margin="2dp"
                                 android:paddingTop="15dp"
                                 android:paddingBottom="15dp"
-                                android:onClick="@{handlers.facebooklogin}"
+                                android:onClick="@{handlers::facebooklogin}"
                                 />
                             <Button
                                 android:id="@+id/sign_in_button"
@@ -217,7 +229,7 @@
                                 android:text="GOOGLE"
                                 android:layout_marginBottom="30dp"
                                 android:textColor="#FA3434"
-                                android:onClick="@{handlers.googlelogin}"
+                                android:onClick="@{handlers::googlelogin}"
                                 android:layout_height="wrap_content" />
 
                         </LinearLayout>

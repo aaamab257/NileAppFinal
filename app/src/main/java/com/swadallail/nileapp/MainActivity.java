@@ -9,12 +9,18 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -24,11 +30,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -85,6 +94,7 @@ import com.swadallail.nileapp.SaveSharedPreference.SaveSharedPreferenceCity;
 import com.swadallail.nileapp.SaveSharedPreference.SaveSharedPreferenceCityId;
 import com.swadallail.nileapp.SaveSharedPreference.SaveSharedPreferenceName;
 import com.swadallail.nileapp.SaveSharedPreference.SaveSharedPreferencePhone;
+import com.swadallail.nileapp.Services.ChatService;
 import com.swadallail.nileapp.api.model.Cities;
 import com.swadallail.nileapp.api.model.Data;
 import com.swadallail.nileapp.api.model.GetShopByTypeAndCityId;
@@ -96,9 +106,21 @@ import com.swadallail.nileapp.api.model.ShopeType;
 import com.swadallail.nileapp.api.service.UserClient;
 import com.swadallail.nileapp.chatpage.ChatActivity;
 import com.swadallail.nileapp.chatroomspage.ChatRooms;
+import com.swadallail.nileapp.data.GetNewOrdersData;
+import com.swadallail.nileapp.data.LocationBody;
+import com.swadallail.nileapp.data.Main;
+import com.swadallail.nileapp.data.MainResponse;
+import com.swadallail.nileapp.delegete.DelegeteHome;
 import com.swadallail.nileapp.helpers.SharedHelper;
+import com.swadallail.nileapp.history.HistoryOreders;
+import com.swadallail.nileapp.loginauth.LoginAuthActivity;
+import com.swadallail.nileapp.network.ApiInterface;
+import com.swadallail.nileapp.offers.OffersPage;
 import com.swadallail.nileapp.orderpage.MakeOrder;
+import com.swadallail.nileapp.uploaddoc.UploadData;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +136,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.R.attr.defaultValue;
 import static android.R.attr.publicKey;
+import static android.R.attr.readPermission;
+import static android.R.attr.start;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
@@ -123,6 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Marker mCurrLocation, locationMarker;
     private Circle mCircle;
     Button call, move, chat;
+    boolean mBound = false;
+    ChatService chatService ;
     int flagInfo = 0; //فلاق عرض إظهار النافذه التي بالأسف كامل أو إخفائها كامله أثناء كتابة البحث
     int flagMarkerSearch = 0;
     int flagMarkerShow = 0;  //فلاق عرض دبوس البحث لوحده فقط
@@ -196,7 +222,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     double mlat, mlong;
     HubConnection connection;
-    Button order ;
+    Button order;
+    Location myLocation;
+    double lat, lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         SupportMapFragment mapView = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         //  mapView.getMapAsync(MainActivity.this);
+
 
         call = (Button) findViewById(R.id.btn_call);
         order = findViewById(R.id.btn_order);
@@ -216,16 +245,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         info = (LinearLayout) this.findViewById(R.id.infow);
         list = (RecyclerView) findViewById(R.id.listViewSearch);
 
-//        android.support.v7.app.ActionBar ab = getSupportActionBar();
-        //      ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+
+        String role = SharedHelper.getKey(MainActivity.this, "role");
+        if (role.equals("WebClient")) {
+            order.setVisibility(View.VISIBLE);
+        } else {
+            order.setVisibility(View.GONE);
+        }
         order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent makeOrder = new Intent(MainActivity.this  , MakeOrder.class );
-                startActivity(makeOrder);
+                String role = SharedHelper.getKey(MainActivity.this, "role");
+                if (role.equals("WebClient")) {
+                    String pconfirm = SharedHelper.getKey(MainActivity.this, "phoneConfirm");
+                    if (pconfirm.equals("true")) {
+                        Intent makeOrder = new Intent(MainActivity.this, MakeOrder.class);
+                        startActivity(makeOrder);
+                    } else {
+                        Intent gotoPhone = new Intent(MainActivity.this, AuthPhone.class);
+                        startActivity(gotoPhone);
+                    }
+
+                } else {
+                    Toast.makeText(MainActivity.this, "هذه الخدمة غير متاحة لحسابكم", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
+
         mapView.getMapAsync(new OnMapReadyCallback() {
             @SuppressLint("WrongConstant")
             @Override
@@ -236,6 +284,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Location myLocation = getLastKnownLocation();
                         mlat = myLocation.getLatitude();
                         mlong = myLocation.getLongitude();
+                        sendLocation(mlat, mlong);
                     } catch (Exception e) {
                         Toast.makeText(MainActivity.this, "قم بقبول الصلاحية لتحديد موقعك", Toast.LENGTH_SHORT).show();
                     }
@@ -307,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 //////
                                 drawMarkerWithCircle(latLng);
                                 prog.setVisibility(View.VISIBLE);
-                                getMarker(GovernId, currentLat, currentLong);
+                                getMarker(GovernId, mlat, mlong);
                             }
 
                         } catch (Exception e) {
@@ -492,14 +541,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             GovernName = item;
                             GovernId = -1;
 
-                            getMarker(GovernId, currentLat, currentLong);
+                            getMarker(GovernId, mlat, mlong);
 
                         } else {
 
                             GovernId = myGovernId.get(item);
                             GovernName = item;
 
-                            getMarker(GovernId, currentLat, currentLong);
+                            getMarker(GovernId, mlat, mlong);
                         }
 
                     } catch (Exception e) {
@@ -736,60 +785,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+    }
 
-
-
-
-
-
-
-/*
-        final ListView lv = (ListView) findViewById(R.id.listViewSearch);
-
-        ArrayList<String> arrayCountry = new ArrayList<>();
-        arrayCountry.addAll(Arrays.asList(getResources().getStringArray(R.array.array_country)));
-
-        adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.list_search, arrayCountry);
-
-
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
+    private void sendLocation(double lat, double lng) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://test.nileappco.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiInterface userclient = retrofit.create(ApiInterface.class);
+        LocationBody bo = new LocationBody(lat, lng);
+        String Token = "Bearer " + SharedHelper.getKey(MainActivity.this, "token");
+        Call<MainResponse> call = userclient.CurrentLocation(Token, bo);
+        call.enqueue(new Callback<MainResponse>() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long offset) {
-                String a = adapter.getItem(position);
-                if (adapter.getItem(position).equals("السودان")) {
-                    Toast.makeText(MainActivity.this, adapter.getItem(position), Toast.LENGTH_LONG).show();
-                    //latLng = new com.mapbox.mapboxsdk.geometry.LatLng(15.5007, 32.5599);
-                    getcamera(latLng, 6);
-                    lv.setVisibility(lv.INVISIBLE);
-                } else {
-                    Toast.makeText(MainActivity.this, a, Toast.LENGTH_LONG).show();
-                    lv.setVisibility(lv.INVISIBLE);
-                }
-
-
+            public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
+                //Toast.makeText(MainActivity.this, "تم تسجيل الموقع بنجاح", Toast.LENGTH_SHORT).show();
             }
 
+            @Override
+            public void onFailure(Call<MainResponse> call, Throwable t) {
+
+            }
         });
-
-*/
-
-
     }
-
-    /*
-    @Override
-    public void onMapReady(GoogleMap map) {
-        gMap = map;
-    }
-*/
 
 
     private Boolean granted() {
-        // boolean isGranted = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         try {
             boolean isGranted = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
@@ -828,7 +849,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void Login() {
+    /*private void Login() {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://www.nileappco.com/api/User/")
@@ -873,142 +894,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-    }
-
-
-        /*
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://mohamedjanemr-002-site1.dtempurl.com/api/User/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-
-        UserClient userclient = retrofit.create(UserClient.class);//لربط الكائن ref وربطه بالapi
-        Call<ResultModels> con = userclient.getCustomers();
-//للتنفيذ
-        con.enqueue(new Callback<ResultModels>() {
-            @Override
-            public void onResponse(Call<ResultModels> call, Response<ResultModels> response) {
-                try {
-
-                    List<Customers> customers = response.body().getCustomers();
-                    for (int i = 0; i < customers.size(); i++) {
-                        String id = customers.get(i).getuserId();
-                        String Name = customers.get(i).getUserName();
-                         String Email = customers.get(i).getEmail();
-                        Toast.makeText(MainActivity.this,  "id=" + id + "name=" + Name + "EMAIL" +Email, Toast.LENGTH_LONG).show();
-                    }
-
-                }
-                catch (Exception e)
-                {
-
-                    Toast.makeText(MainActivity.this, "error internet", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResultModels> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-
-    */
+    }*/
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // R.menu.mymenu is a reference to an xml file named mymenu.xml which should be inside your res/menu directory.
-        // If you don't have res/menu, just create a directory named "menu" inside res
-        //  getMenuInflater().inflate(R.menu.mymenu, menu);
-        //  return super.onCreateOptionsMenu(menu);
+
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.mymenu, menu);
-
-        //  MenuItem item = menu.findItem(R.id.menuSearch);
-//        android.widget.SearchView searchView = (android.widget.SearchView) item.getActionView();
-
-
-        /*
-        int linlayId = getResources().getIdentifier("android:id/search_plate", null, null);
-        View view = searchView.findViewById(linlayId);
-        Drawable drawColor = getResources().getDrawable(R.drawable.searchablecolor);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawColor);
-        }
-
-
-      //  ((EditText)  searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
-        //        .setHintTextColor(getResources().getColor(R.color.white));
-
-        int id = searchView.getContext()
-                .getResources()
-                .getIdentifier("android:id/search_src_text", null, null);
-        TextView textView = (TextView) searchView.findViewById(id);
-        textView.setTextColor(Color.BLACK);
-*/
-
-/*
-
-        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
-        View searchPlate = searchView.findViewById(searchPlateId);
-        searchPlate.setBackgroundResource(R.drawable.bg_white_background);
-
-        int searchSrcTextId = getResources().getIdentifier("android:id/search_src_text", null, null);
-        EditText searchEditText = (EditText) searchView.findViewById(searchSrcTextId);
-        searchEditText.setTextColor(Color.BLACK);
-        searchEditText.setHintTextColor(Color.LTGRAY);
-
-        int closeButtonId = searchView.getContext().getResources().getIdentifier("android:id/search_close_btn", null, null);
-        ImageView closeButtonImage = (ImageView) searchView.findViewById(closeButtonId);
-        closeButtonImage.setColorFilter(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
-*/
-
-        /*
-
-    // Associate searchable configuration with the SearchView
-    SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-    SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
-            .getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-
-*/
-
-
-  /*
-        searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-              //  ListView lv = (ListView) findViewById(R.id.listViewCountry);
-               // lv.setVisibility(lv.INVISIBLE);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-               // ListView lv = (ListView) findViewById(R.id.listViewCountry);
-                //lv.setVisibility(lv.VISIBLE);
-               // adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            public boolean onClose() {
-               // back();
-                return false;
-            }
-        });
-
-      //  ListView lv = (ListView) findViewById(R.id.listViewCountry);
-       // lv.setVisibility(lv.INVISIBLE);
-
-        */
-
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -1051,26 +945,74 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-       /*
-        if (item.getItemId() == R.id.nav_item_one) {
-            Intent intent1 = new Intent(MainActivity.this, AddActivity.class);
-           // Intent intent1 = new Intent(MainActivity.this, InsertMapsActivity.class);
-            startActivity(intent1);
-        }
-        else
+        if (item.getItemId() == R.id.offers) {
+            String role = SharedHelper.getKey(MainActivity.this, "role");
+            if (role.equals("WebClient")) {
+                String pconfirm = SharedHelper.getKey(MainActivity.this, "phoneConfirm");
+                if (pconfirm.equals("true")) {
+                    Intent offerpage = new Intent(MainActivity.this, OffersPage.class);
+                    startActivity(offerpage);
+                } else {
+                    Intent gotoPhone = new Intent(MainActivity.this, AuthPhone.class);
+                    startActivity(gotoPhone);
+                }
 
-            if (item.getItemId() == R.id.nav_item_two) {
-                Toast.makeText(this,  "two", Toast.LENGTH_SHORT).show();
-        } else if (item.getItemId() == R.id.nav_item_three) {
-
-                Intent intent2 = new Intent(MainActivity.this, AddOffer.class);
-                startActivity(intent2);
-
-        }else
-            */
+            } else {
+                Toast.makeText(this, "لا يمكنك زيارة العروض", Toast.LENGTH_LONG).show();
+            }
 
 
-        if (item.getItemId() == R.id.nav_item_four) {
+            //  Toast.makeText(this,"لايمكنك مشاركة النسخة التجريبية",Toast.LENGTH_SHORT).show();
+
+
+        } else if (item.getItemId() == R.id.history) {
+
+            String pconfirm = SharedHelper.getKey(MainActivity.this, "phoneConfirm");
+            if (pconfirm.equals("true")) {
+                Intent offerpage = new Intent(MainActivity.this, HistoryOreders.class);
+                startActivity(offerpage);
+            } else {
+                Intent gotoPhone = new Intent(MainActivity.this, AuthPhone.class);
+                startActivity(gotoPhone);
+            }
+
+
+            //  Toast.makeText(this,"لايمكنك مشاركة النسخة التجريبية",Toast.LENGTH_SHORT).show();
+
+
+        } else if (item.getItemId() == R.id.newOrders) {
+            String role = SharedHelper.getKey(MainActivity.this, "role");
+            if (role.equals("Representive")) {
+                String pconfirm = SharedHelper.getKey(MainActivity.this, "phoneConfirm");
+                if (pconfirm.equals("true")) {
+                    Intent goToOrderPage = new Intent(MainActivity.this, DelegeteHome.class);
+                    startActivity(goToOrderPage);
+                } else {
+                    Intent gotoPhone = new Intent(MainActivity.this, AuthPhone.class);
+                    startActivity(gotoPhone);
+                }
+            } else {
+                Toast.makeText(this, "لا يمكنك زيارة الطلبات الجديدة", Toast.LENGTH_LONG).show();
+            }
+
+
+            //  Toast.makeText(this,"لايمكنك مشاركة النسخة التجريبية",Toast.LENGTH_SHORT).show();
+
+
+        } else if (item.getItemId() == R.id.join_asDelivery) {
+            String role = SharedHelper.getKey(MainActivity.this, "role");
+            if (role.equals("WebClient")) {
+                Intent goToRegis = new Intent(MainActivity.this, UploadData.class);
+                startActivity(goToRegis);
+            } else {
+                Toast.makeText(this, "تم تسجيل حسابكم كمندوب بالفعل", Toast.LENGTH_LONG).show();
+            }
+
+
+            //  Toast.makeText(this,"لايمكنك مشاركة النسخة التجريبية",Toast.LENGTH_SHORT).show();
+
+
+        } else if (item.getItemId() == R.id.nav_item_four) {
 
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
@@ -1089,6 +1031,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (item.getItemId() == R.id.nav_item_six) {
             Intent intent2 = new Intent(MainActivity.this, ReportProblem.class);
             startActivity(intent2);
+            // }else if (item.getItemId() == R.id.nav_item_seven) {
+            //////////////////////////
+        } else if (item.getItemId() == R.id.logout) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.dialog_logout, null);
+            dialogBuilder.setView(dialogView);
+            AlertDialog alertDialog = dialogBuilder.create();
+
+            Button logout = dialogView.findViewById(R.id.btn_ok);
+            Button no = dialogView.findViewById(R.id.btn_cancel);
+            logout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //SharedHelper.putKey(MainActivity.this, "token", "");
+                    SharedHelper.putKey(MainActivity.this, "UserName", "NONE");
+                    SharedHelper.putKey(MainActivity.this, "name", "NONE");
+                    SharedHelper.putKey(MainActivity.this, "picUrl", "NONE");//isLoged
+                    SharedHelper.putKey(MainActivity.this, "isLoged", "no");
+                    SharedHelper.putKey(MainActivity.this, "token", "NONE");
+                    chatService = new ChatService() ;
+                    //chatService.getToken(MainActivity.this, "none" , "none");
+
+                    alertDialog.dismiss();
+                    SharedHelper.clearSharedPreferences(MainActivity.this);
+                    MainActivity.this.finish();
+                }
+            });
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    alertDialog.cancel();
+                }
+            });
+            alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            alertDialog.show();
             // }else if (item.getItemId() == R.id.nav_item_seven) {
             //////////////////////////
         }
@@ -1211,6 +1190,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mCurrLocation != null) {
             mCurrLocation.remove();
         }
+
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
@@ -1222,6 +1202,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //If you only need one location, unregister the listener
         //LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    private void hitLocationApi(Location latLng) {
+        //Toast.makeText(MainActivity.this, latLng.getLatitude() + "", Toast.LENGTH_LONG).show();
     }
 
 
@@ -2022,7 +2006,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
                             lastPhoneMarker = shopePhone;
-                            movelatlng = shopeLatLng;
+                            LatLng mo = new LatLng(mlat, mlong);
+                            movelatlng = mo;
                             chatEnabled = schatEnabled;
                             shopID = sshopID;
                             chat.setEnabled(true);
@@ -2126,7 +2111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 flagMarkerShow = 0;
                 prog.setVisibility(View.VISIBLE);
                 getcamera(new LatLng(currentLat, currentLong), 14);
-                getMarker(GovernId, currentLat, currentLong);
+                getMarker(GovernId, mlat, mlong);
             }
 
             /////
@@ -2175,27 +2160,99 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        try {
-            clearSearch();
-            edittext.setText("");
-            linearSearch.setVisibility(View.INVISIBLE);
-            cross.setVisibility(View.INVISIBLE);
-            if (info.getVisibility() == View.GONE)
-                info.setVisibility(View.VISIBLE);
 
-            // } else if(flagContentInfo == 1){
-            //   infoSleep();
 
-            if (flagMarkerShow == 1) {
-                createMarkerAfterSearch();
-            } else if (flagContentInfo == 1) {
-                infoSleep();
-            } else {
-                super.onBackPressed();
+        clearSearch();
+        edittext.setText("");
+        linearSearch.setVisibility(View.INVISIBLE);
+        cross.setVisibility(View.INVISIBLE);
+        if (flagMarkerShow == 1) {
+            createMarkerAfterSearch();
+            //Toast.makeText(MainActivity.this, "Here4", Toast.LENGTH_SHORT).show();
+        }
+
+        if (info.getVisibility() == View.GONE) {
+            info.setVisibility(View.VISIBLE);
+            //Toast.makeText(MainActivity.this, "Here3", Toast.LENGTH_SHORT).show();
+        }
+
+
+        if (flagContentInfo == 1) {
+            //Toast.makeText(MainActivity.this, "Here2", Toast.LENGTH_SHORT).show();
+            infoSleep();
+            gMap.clear();
+        } else if (mdrawerLayout.isDrawerVisible(GravityCompat.START)) {
+            mdrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            getDialog();
+        }
+
+        //Toast.makeText(MainActivity.this, "Non", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+    private void getDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_out, null);
+        dialogBuilder.setView(dialogView);
+        AlertDialog alertDialog = dialogBuilder.create();
+
+        Button logout = dialogView.findViewById(R.id.btn_ok);
+        Button no = dialogView.findViewById(R.id.btn_cancel);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //SharedHelper.putKey(MainActivity.this, "token", "");
+                MainActivity.this.finish();
+                //stopService(new Intent(MainActivity.this, ChatService.class));
             }
-        } catch (Exception e) {
+        });
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.cancel();
+            }
+        });
+        alertDialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onResume() {
+        if (granted()) {
+            try {
+                Location myLocation = getLastKnownLocation();
+                mlat = myLocation.getLatitude();
+                mlong = myLocation.getLongitude();
+                sendLocation(mlat, mlong);
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this, "قم بقبول الصلاحية لتحديد موقعك", Toast.LENGTH_SHORT).show();
+            }
 
         }
+        super.onResume();
     }
+
+    @Override
+    protected void onRestart() {
+
+        Location myLocation = getLastKnownLocation();
+        mlat = myLocation.getLatitude();
+        mlong = myLocation.getLongitude();
+        sendLocation(mlat, mlong);
+        super.onRestart();
+    }
+
+    @Override
+    protected void onStart() {
+        /*Intent intent2 = new Intent(MainActivity.this, ChatService.class);
+        bindService(intent2, mConnection, Context.BIND_AUTO_CREATE);*/
+        super.onStart();
+    }
+    /**/
+
 
 }

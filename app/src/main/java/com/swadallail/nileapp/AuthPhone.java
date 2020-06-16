@@ -67,7 +67,7 @@ public class AuthPhone extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-      // View view = inflater.inflate(R.layout.login_layout, container, false);
+        // View view = inflater.inflate(R.layout.login_layout, container, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             LinearLayout li = findViewById(R.id.li);
             li.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
@@ -75,10 +75,8 @@ public class AuthPhone extends AppCompatActivity {
         }
 
 
-
         findViews();
         StartFirebaseLogin();
-
 
 
         btnGenerateOTP.setOnClickListener(new View.OnClickListener() {
@@ -103,8 +101,7 @@ public class AuthPhone extends AppCompatActivity {
                             AuthPhone.this,        // Activity (for callback binding)
                             mCallback);                      // OnVerificationStateChangedCallbacks
 
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
@@ -112,19 +109,13 @@ public class AuthPhone extends AppCompatActivity {
         });
 
 
-
-
     }
 
 
     private void findViews() {
-        btnGenerateOTP=findViewById(R.id.btn_generate_otp);
-        etPhoneNumber=findViewById(R.id.et_phone_number);
+        btnGenerateOTP = findViewById(R.id.btn_generate_otp);
+        etPhoneNumber = findViewById(R.id.et_phone_number);
     }
-
-
-
-
 
 
     private void StartFirebaseLogin() {
@@ -135,27 +126,29 @@ public class AuthPhone extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 try {
+                    dialog.dismiss();
+                    Toast.makeText(AuthPhone.this, "هذا الرقم تم التسجيل به من قبل", Toast.LENGTH_SHORT).show();
+                   //getCheckUser(phoneNumber);
 
-                    getCheckUser(phoneNumber);
+                } catch (Exception e) {
 
                 }
-                catch (Exception e){}
 
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
                 dialog.dismiss();
-                Toast.makeText(AuthPhone.this,"فشل التحقق",Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(AuthPhone.this, "فشل التحقق", Toast.LENGTH_SHORT).show();
+                Log.e("AuthPhone" , e.toString());
 
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     //Log.d(TAG, "Invalid credential: "
-                          //  + e.getLocalizedMessage());
+                    //  + e.getLocalizedMessage());
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // SMS quota exceeded
-                    Toast.makeText(AuthPhone.this,"لقد تجاوزة عدد الرسائل اليوم",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AuthPhone.this, "لقد تجاوزة عدد الرسائل اليوم", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -168,31 +161,28 @@ public class AuthPhone extends AppCompatActivity {
 
                 try {
 
-                    Toast.makeText(AuthPhone.this,"تم إرسال الكود",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AuthPhone.this, "تم إرسال الكود", Toast.LENGTH_SHORT).show();
 
                     Intent intent2 = new Intent(AuthPhone.this, AuthCode.class);
                     intent2.putExtra("code", verificationCode);
                     intent2.putExtra("phone", phoneNumber);
                     // intent2.putExtra("cb", (Parcelable) mCallback);
                     //intent2.putExtra("token", forceResendingToken);
-                   // callbackphone ob = new callbackphone();
+                    // callbackphone ob = new callbackphone();
                     //ob.setForceResendingToken(forceResendingToken);
                     //ob.setmCallBacks(mCallback);
 
                     startActivity(intent2);
 
-            }
-            catch (Exception e){}
+                } catch (Exception e) {
+                }
 
             }
         };
     }
 
 
-
-    private void getCheckUser(String mobileNo){
-
-
+    private void getCheckUser(String mobileNo) {
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -220,7 +210,7 @@ public class AuthPhone extends AppCompatActivity {
                     CheckUser checkUser = response.body().getCheckUser();
 
 
-                    if(null == checkUser) {
+                    if (null == checkUser) {
 
                         dialog.dismiss();
                         Toast.makeText(AuthPhone.this, "رقمك غير متوفر حاليا,الرجاء مراجعة خدمة العملاء", Toast.LENGTH_SHORT).show();
@@ -234,19 +224,17 @@ public class AuthPhone extends AppCompatActivity {
                         String Name = checkUser.getfullName();
                         String phone = checkUser.getmobileNo();
 
-                                    dialog.dismiss();
+                        dialog.dismiss();
 
-                                    SaveSharedPreferencePhone.setUserName(AuthPhone.this, phone);
-                                    SaveSharedPreferenceName.setUserName(AuthPhone.this, Name);
+                        SaveSharedPreferencePhone.setUserName(AuthPhone.this, phone);
+                        SaveSharedPreferenceName.setUserName(AuthPhone.this, Name);
 
-                                    Toast.makeText(AuthPhone.this, "نجح التحقق", Toast.LENGTH_SHORT).show();
-                                    Intent intent2 = new Intent(AuthPhone.this, MainActivity.class);
-                                    startActivity(intent2);
-                                    finish();
-                            }
-                }
-                catch (Exception e)
-                {
+                        Toast.makeText(AuthPhone.this, "نجح التحقق", Toast.LENGTH_SHORT).show();
+                        Intent intent2 = new Intent(AuthPhone.this, MainActivity.class);
+                        startActivity(intent2);
+                        finish();
+                    }
+                } catch (Exception e) {
 
                     Toast.makeText(AuthPhone.this, "error internet", Toast.LENGTH_LONG).show();
                     dialog.dismiss();
@@ -266,14 +254,7 @@ public class AuthPhone extends AppCompatActivity {
         });
 
 
-
-
     }
-
-
-
-
-
 
 
     @Override

@@ -8,10 +8,14 @@
     <string name="txt_selected">Please Select Your Account Type</string>
     <string name="add_activity">Add Activity</string>
     <string name="offers">Offers</string>
+    <string name="choose">Choose Order to see Offers</string>
     <string name="add_offers">Add Offers</string>
     <string name="share">Share</string>
     <string name="Connect_with_us">Connect with us</string>
     <string name="Report_a_problem">Report a Problem</string>
+    <string name="joinasDelivery">Join As Delivery</string>
+    <string name="history">Old Orders</string>
+    <string name="newOrders">New Orders</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="txt_delivery">Delivery</string>
     <string name="txt_ordersu">Submit The Order</string>
@@ -38,6 +42,7 @@
     <string name="chat">Chat</string>
     <string name="txt_password">Password</string>
     <string name="done">Done</string>
+    <string name="donesend">Successfully</string>
     <string name="cancel">Cancel</string>
     <string name="txt_remember">Remember me</string>
     <string name="txt_forgetpass">Forget Password ?</string>
@@ -84,6 +89,7 @@
     <string name="closebutton">Close Button for Activity</string>
     <string name="newUser">Not a Member yet? Sign Up here.</string>
     <string name="fullName">Full Name</string>
+    <string name="natId">National ID</string>
     <string name="mobileNumber">Mobile Number</string>
     <string name="location">Location</string>
     <string name="confirmPassword">Confirm Password</string>

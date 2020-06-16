@@ -28,6 +28,10 @@ import com.swadallail.nileapp.SaveSharedPreference.SaveSharedPreferencePhone;
 import com.swadallail.nileapp.api.model.CheckUser;
 import com.swadallail.nileapp.api.model.ResultCheckUser;
 import com.swadallail.nileapp.api.service.UserClient;
+import com.swadallail.nileapp.data.MainResponse;
+import com.swadallail.nileapp.helpers.SharedHelper;
+import com.swadallail.nileapp.network.ApiInterface;
+import com.swadallail.nileapp.registerauth.RegisterAuthActivity;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AuthCode extends AppCompatActivity {
 
-    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback,mCallbacks;
+    PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallback, mCallbacks;
     Button btnGenerateOTP, btnSignIn;
     EditText etPhoneNumber, etOTP;
     TextView code;
@@ -55,7 +59,7 @@ public class AuthCode extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_code);
 
-      //
+        //
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -65,21 +69,17 @@ public class AuthCode extends AppCompatActivity {
 
             verificationCode = extras.getString("code");
             phoneNumber = extras.getString("phone");
-           // callbackphone ob = new callbackphone();
+            // callbackphone ob = new callbackphone();
             //token = ob.getForceResendingToken();
-           // mCallbacks = ob.getmCallBacks();
+            // mCallbacks = ob.getmCallBacks();
             //mCallBacks = (PhoneAuthProvider.OnVerificationStateChangedCallbacks) extras.get("cb");
             // token =  extras.get("token");
+        } catch (Exception e) {
         }
-        catch (Exception e){}
-
 
 
         findViews();
         StartFirebaseLogin();
-
-
-
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -92,18 +92,15 @@ public class AuthCode extends AppCompatActivity {
                     dialog.show();
                     dialog.setCanceledOnTouchOutside(false);
                     dialog.setCancelable(false);
-
                     otp = etOTP.getText().toString();
                     PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, otp);
                     SigninWithPhone(credential);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
             }
         });
-
 
 
         code.setOnClickListener(new View.OnClickListener() {
@@ -130,8 +127,8 @@ public class AuthCode extends AppCompatActivity {
                             mCallback,
                             token);        // resending with token got at previous call's `callbacks` method `onCodeSent`
                             */
-                    // [END start_phone_auth]
-                   // }
+                // [END start_phone_auth]
+                // }
 
 /*
                     PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -150,21 +147,15 @@ public class AuthCode extends AppCompatActivity {
         });
 
 
-
-
     }
 
 
     private void findViews() {
 
-        btnSignIn=findViewById(R.id.btn_sign_in);
-        etOTP=findViewById(R.id.et_otp);
+        btnSignIn = findViewById(R.id.btn_sign_in);
+        etOTP = findViewById(R.id.et_otp);
         code = findViewById(R.id.code);
     }
-
-
-
-
 
 
     private void StartFirebaseLogin() {
@@ -176,12 +167,13 @@ public class AuthCode extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
                 //Toast.makeText(AuthCode.this,"verification completed",Toast.LENGTH_SHORT).show();
-                getCheckUser(phoneNumber);
+                confirmUser();
+
             }
 
             @Override
             public void onVerificationFailed(FirebaseException e) {
-                Toast.makeText(AuthCode.this,"فشل التحقق",Toast.LENGTH_SHORT).show();
+                Toast.makeText(AuthCode.this, "فشل التحقق", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
 
@@ -189,12 +181,11 @@ public class AuthCode extends AppCompatActivity {
             public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 verificationCode = s;
-                Toast.makeText(AuthCode.this,"تم إرسال الكود",Toast.LENGTH_SHORT).show();
+                Toast.makeText(AuthCode.this, "تم إرسال الكود", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         };
     }
-
 
 
     private void SigninWithPhone(PhoneAuthCredential credential) {
@@ -203,103 +194,56 @@ public class AuthCode extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                           // startActivity(new Intent(AuthPhone.this,SignedIn.class));
+                            // startActivity(new Intent(AuthPhone.this,SignedIn.class));
                             //finish();
                             try {
+                                confirmUser();
 
-                                getCheckUser(phoneNumber);
 
+
+                            } catch (Exception e) {
                             }
-                            catch (Exception e){}
 
 
                         } else {
-                            Toast.makeText(AuthCode.this,"رمز التحقق غير صحيح",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AuthCode.this, "رمز التحقق غير صحيح", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     }
                 });
     }
 
-
-
-    private void getCheckUser(String mobileNo){
-
-
-
-
+    private void confirmUser() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.nileappco.com/api/User/")
+                .baseUrl("https://test.nileappco.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
 
-        UserClient userclient = retrofit.create(UserClient.class);//لربط الكائن ref وربطه بالapi
+        ApiInterface userclient = retrofit.create(ApiInterface.class);//لربط الكائن ref وربطه بالapi
 
-
-        Call<ResultCheckUser> con = userclient.getCheckUser(mobileNo.substring(1));
+        String token = "Bearer "+ SharedHelper.getKey(AuthCode.this , "token") ;
+        Call<MainResponse> con = userclient.ConfirmPhone(token);
 
 //للتنفيذ
-        con.enqueue(new Callback<ResultCheckUser>() {
+        con.enqueue(new Callback<MainResponse>() {
             @Override
-            public void onResponse(Call<ResultCheckUser> call, retrofit2.Response<ResultCheckUser> response) {
-                if (flagInternet == 1) {
-                    Toast.makeText(AuthCode.this, getResources().getString(R.string.internet_connection_restored), Toast.LENGTH_LONG).show();
-                    flagInternet = 0;
-                }
-
-                try {
-
-                CheckUser checkUser = response.body().getCheckUser();
-
-
-                if(null == checkUser) {
-
-                                dialog.dismiss();
-                                Intent intent2 = new Intent(AuthCode.this, signup.class);
-                                intent2.putExtra("phone", mobileNo); //lat
-
-                                    startActivity(intent2);
-                                                finish();
-                            }else {
-                                    String id = checkUser.getid();
-                                    String Name = checkUser.getfullName();
-                                    String phone = checkUser.getmobileNo();
-                                dialog.dismiss();
-                                SaveSharedPreferencePhone.setUserName(AuthCode.this, phone);
-                                SaveSharedPreferenceName.setUserName(AuthCode.this, Name);
-
-                                Toast.makeText(AuthCode.this, "نجح التحقق", Toast.LENGTH_SHORT).show();
-                                Intent intent2 = new Intent(AuthCode.this, MainActivity.class);
-                                startActivity(intent2);
-
-               }
-                }catch (Exception e)
-                {
-
-                  //  Toast.makeText(AuthCode.this, "error internet", Toast.LENGTH_LONG).show();
-                   // dialog.dismiss();
+            public void onResponse(Call<MainResponse> call, retrofit2.Response<MainResponse> response) {
+                if(response.isSuccessful()){
+                    Intent intent2 = new Intent(AuthCode.this, MainActivity.class);
+                    startActivity(intent2);
+                    AuthCode.this.finish();
                 }
 
             }
 
             @Override
-            public void onFailure(Call<ResultCheckUser> call, Throwable t) {
-                if (flagInternet == 0) {
-                    dialog.dismiss();
-                    Toast.makeText(AuthCode.this, getResources().getString(R.string.please_check_your_internet_connection), Toast.LENGTH_LONG).show();
-                   // Toast.makeText(AuthCode.this,t.getMessage(), Toast.LENGTH_LONG).show();
-                    flagInternet = 1;
-                }
-
-
+            public void onFailure(Call<MainResponse> call, Throwable t) {
+                Toast.makeText(AuthCode.this, "هناك خطأ", Toast.LENGTH_SHORT).show();
             }
         });
 
-
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -315,7 +259,6 @@ public class AuthCode extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }
-
 
 
 }

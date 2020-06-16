@@ -54,60 +54,52 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ChatActivity extends AppCompatActivity {
-    ChatService chatService ;
+    ChatService chatService;
     boolean mBound = false;
     MyReceiver myReceiver;
-    MessageAdapter adapter ;
+    MessageAdapter adapter;
     ProgressDialog dialog;
-    int finalchatid ;
-    String chatname ;
-   // ArrayAdapter<String> arrayAdapter ;
-    //String message  = "";
-    String user_id ;
-    GridView gridView ;
+    int finalchatid;
+    String chatname;
+    String user_id;
+    GridView gridView;
+    IntentFilter intentFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         Intent intent = new Intent(this, ChatService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-
         Intent inGet = getIntent();
         user_id = inGet.getStringExtra("shopId");
         finalchatid = inGet.getIntExtra("chatId", 0);
+        SharedHelper.putKey(ChatActivity.this, "opened", "true");
         myReceiver = new MyReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("Send");
+        intentFilter = new IntentFilter();
+        //intentFilter.addAction("Send");
         intentFilter.addAction("notifyAdapter");
         registerReceiver(myReceiver, intentFilter);
-        Log.e("userid" , user_id+"");
-        Log.e("chatid" , finalchatid+"");
-        getChatMessages(user_id , finalchatid);
-        //getSupportActionBar().setTitle(chatname);
-
-        //TextView textView = (TextView)findViewById(R.id.tvMain);
-        /*ListView listView = (ListView)findViewById(R.id.lvMessages);
-        List<String> messageList = new ArrayList<String>();
-        arrayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, messageList);
-        listView.setAdapter(arrayAdapter);*/
+        Log.e("userid", user_id + "");
+        Log.e("chatid", finalchatid + "");
+        getChatMessages(user_id, finalchatid);
         gridView = (GridView) findViewById(R.id.gvMessages);
         gridView.setTranscriptMode(GridView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 
         ImageButton sendButton = findViewById(R.id.bSend);
-        final EditText editText = (EditText)findViewById(R.id.etMessageText);
+        final EditText editText = (EditText) findViewById(R.id.etMessageText);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String message = editText.getText().toString();
-                if(message.isEmpty()){
+                if (message.isEmpty()) {
                     Toast.makeText(ChatActivity.this, "رجاء قم بكتابة الرسالة", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     editText.setText("");
                     CustomMessage object = new CustomMessage();
-                    object.Message = message ;
-                    object.ChatId = finalchatid ;
+                    object.Message = message;
+                    object.ChatId = finalchatid;
                     chatService.Send(object);
                 }
 
@@ -129,38 +121,38 @@ public class ChatActivity extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://nileapp-001-site3.itempurl.com/api/")
+                .baseUrl("https://test.nileappco.com/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApiInterface userclient = retrofit.create(ApiInterface.class);
-        MessageBody body = new MessageBody(chatId , user_id);
-        Log.e("Body" ,""+chatId );
+        MessageBody body = new MessageBody(chatId, user_id);
+        Log.e("Body", "" + chatId);
         //String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYUBhLmNvbSIsInN1YiI6ImFAYS5jb20iLCJqdGkiOiJhZjFkMTNkMC00NzViLTQ2OWMtOWEwYi01YmU5NzE5YWJjMTciLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjAyN2Y2MWJiLWFlNzUtNGE2Yy04YWY4LWE5MDcyNmFlM2IyOCIsIlVzZXJJZCI6IjAyN2Y2MWJiLWFlNzUtNGE2Yy04YWY4LWE5MDcyNmFlM2IyOCIsImV4cCI6MTU5MjMyOTcxMywiaXNzIjoiUmF6TmV0LmNvbSIsImF1ZCI6IlJhek5ldC5jb20ifQ.ZoImLshfPppUM7qrURMeIBV-61YNeWAqF9Ge1lQ4N0w";
-        String token = "Bearer "+SharedHelper.getKey(ChatActivity.this , "token");
-        Call<MainResponse<ChatResponse<ArrayList<MessageViewModel>>>> call = userclient.GetChatMessages(token,body);
+        String token = "Bearer " + SharedHelper.getKey(ChatActivity.this, "token");
+        Call<MainResponse<ChatResponse<ArrayList<MessageViewModel>>>> call = userclient.GetChatMessages(token, body);
         call.enqueue(new Callback<MainResponse<ChatResponse<ArrayList<MessageViewModel>>>>() {
             @Override
             public void onResponse(Call<MainResponse<ChatResponse<ArrayList<MessageViewModel>>>> call, Response<MainResponse<ChatResponse<ArrayList<MessageViewModel>>>> response) {
-                if(response.body() != null){
+                if (response.body() != null) {
 
-                    finalchatid = response.body().data.chatId ;
+                    finalchatid = response.body().data.chatId;
                     //chatname = response.body().data.messages.get(0).from;
-                    if (response.body().data.messages.size() > 0){
+                    if (response.body().data.messages.size() > 0) {
                         Globals.Messages = response.body().data.messages;
-                    }else{
+                    } else {
                         Toast.makeText(ChatActivity.this, "لا يوجد محادثة من قبل", Toast.LENGTH_SHORT).show();
-                        adapter = new MessageAdapter(ChatActivity.this , Globals.Messages);
+                        adapter = new MessageAdapter(ChatActivity.this, Globals.Messages);
                         gridView.setAdapter(adapter);
                     }
                 }
 
 
-                for (int i = 0  ;i < response.body().data.messages.size() ; i ++){
-                    if(response.body().data.messages.get(i).isMine == 1){
-                        adapter = new MessageAdapter(ChatActivity.this , Globals.Messages,1);
+                for (int i = 0; i < response.body().data.messages.size(); i++) {
+                    if (response.body().data.messages.get(i).isMine == 1) {
+                        adapter = new MessageAdapter(ChatActivity.this, Globals.Messages, 1);
                         gridView.setAdapter(adapter);
-                    }else {
-                        adapter = new MessageAdapter(ChatActivity.this , Globals.Messages,0);
+                    } else {
+                        adapter = new MessageAdapter(ChatActivity.this, Globals.Messages, 0);
                         gridView.setAdapter(adapter);
                     }
                 }
@@ -170,22 +162,23 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MainResponse<ChatResponse<ArrayList<MessageViewModel>>>> call, Throwable t) {
-                Log.e("BodyE" ,""+t );
+                Log.e("BodyE", "" + t);
             }
         });
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
 
         if (mBound) {
             unbindService(mConnection);
             unregisterReceiver(myReceiver);
             mBound = false;
         }
+        super.onStop();
 
     }
+
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
@@ -193,8 +186,6 @@ public class ChatActivity extends AppCompatActivity {
             ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
             chatService = binder.getService();
             mBound = true;
-
-
         }
 
         @Override
@@ -202,6 +193,7 @@ public class ChatActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+
     private class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -209,15 +201,22 @@ public class ChatActivity extends AppCompatActivity {
                 case "notifyAdapter":
                     adapter.notifyDataSetChanged();
                     break;
-
             }
+
         }
 
     }
-    /*public void receVied(String message){
-        arrayAdapter.add(message);
-        Log.e("Message",message);
-        arrayAdapter.notifyDataSetChanged();
-    }*/
 
+
+    @Override
+    protected void onDestroy() {
+        SharedHelper.putKey(ChatActivity.this, "opened", "no");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        SharedHelper.putKey(ChatActivity.this, "opened", "no");
+        super.onPause();
+    }
 }

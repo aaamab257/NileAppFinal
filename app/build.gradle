@@ -4,13 +4,13 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            storeFile file('D:\\keystorefile.jks')
+            storeFile file('C:\\Users\\AAAMA\\Downloads\\keystorefile.jks')
             keyAlias = 'key0'
             storePassword 'MAZENAPP'
             keyPassword 'MAZENAPP'
         }
         release {
-            storeFile file('D:\\keystorefile.jks')
+            storeFile file('C:\\Users\\AAAMA\\Downloads\\keystorefile.jks')
             keyAlias = 'key0'
             storePassword 'MAZENAPP'
             keyPassword 'MAZENAPP'
@@ -22,8 +22,8 @@ android {
         applicationId "com.swadallail.nileapp"
         minSdkVersion 20
         targetSdkVersion 29
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 17
+        versionName "2.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         useLibrary "org.apache.http.legacy"
         multiDexEnabled true
@@ -31,7 +31,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }

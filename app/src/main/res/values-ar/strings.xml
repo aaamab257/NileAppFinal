@@ -7,10 +7,14 @@
     <string name="txt_selected">من فضلك قم بأختيار نوع الحساب</string>
     <string name="add_activity">إضافة نشاط</string>
     <string name="offers">العروض</string>
+    <string name="choose">قم بأختيار الطلب لرؤية العروض</string>
     <string name="add_offers">إضافة عرض</string>
     <string name="share">المشاركة</string>
     <string name="Connect_with_us">إتصل بنا</string>
     <string name="Report_a_problem">الإبلاغ عن مشكله</string>
+    <string name="joinasDelivery">تسجيل كمندوب</string>
+    <string name="history">الطلبات السابقة</string>
+    <string name="newOrders">الطلبات الجديدة</string>
     <string name="edit_profile">تعديل الصفحة الشخصية</string>
     <string name="sign_out">تسجيل الخروج</string>
     <string name="other">آخرى</string>
@@ -26,7 +30,7 @@
     <string name="chat">مراسلة</string>
     <string name="done">تم</string>
     <string name="cancel">إلغاء</string>
-
+    <string name="donesend">Successfully</string>
 
     <string name="name_of_activity">إسم النشاط</string>
     <string name="user_name">إسم المستخدم</string>
@@ -53,7 +57,7 @@
 
 
     <string name="Make_sure_the_phone_number_is_correct">تأكد من أن رقم الموبايل صحيح</string>
-
+    <string name="title_activity_map_activty">الخريطة</string>
     <string name="error">خطأ</string>
 
 
@@ -65,6 +69,7 @@
     <string name="closebutton">زر إغلاق للنشاط</string>
     <string name="newUser">لست عضوا حتى الآن؟ سجل هنا.</string>
     <string name="fullName">الإسم الكامل</string>
+    <string name="natId">رقم البطاقة</string>
     <string name="mobileNumber">رقم الجوال</string>
     <string name="location">الموقع</string>
     <string name="confirmPassword">تأكيد كلمة المرور</string>

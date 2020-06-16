@@ -49,7 +49,7 @@ public class ChatRooms extends AppCompatActivity {
     }
 
     private void getChats() {
-        String url = "http://nileapp-001-site3.itempurl.com/api/";
+        String url = "https://test.nileappco.com/api/";
         dialog = new ProgressDialog(ChatRooms.this);
         dialog.setMessage(getApplicationContext().getResources().getString(R.string.the_data_is_loaded));
         dialog.show();
