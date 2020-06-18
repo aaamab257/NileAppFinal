@@ -90,7 +90,7 @@
         <service
             android:name=".Services.ChatService"
             android:enabled="true"
-            android:exported="true" />
+            />
 
         <activity android:name=".chatpage.ChatActivity" />
 
@@ -160,7 +160,7 @@
         <activity android:name=".Drawer.ReportProblem" />
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="stateAlwaysHidden"/>
 
         <meta-data
             android:name="com.google.android.gms.version"

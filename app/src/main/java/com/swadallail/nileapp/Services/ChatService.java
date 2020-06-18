@@ -55,33 +55,37 @@ import io.reactivex.Single;
 public class ChatService extends Service {
 
     private final IBinder mBinder = new LocalBinder();
-    HubConnection hubConnection;
+    static HubConnection hubConnection;
     Handler handler;
-    String token , username;
+    String token, username;
+    static boolean hubStarted = false;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-
-        if (!StartHubConnection()) {
+//        onTaskRemoved(intent);
+        hubStarted = StartHubConnection();
+        if (!hubStarted) {
             ExitWithMessage("Chat Service failed to start!");
-        } else if (StartHubConnection()) {
+        } else if (hubStarted) {
             ExitWithMessage("Done");
         }
-        OnNotificationRecevied();
-        OnRecevied();
-        onTaskRemoved(intent);
+
+
         return mBinder;
     }
 
-    public void getToken(Context context,String tokens , String usernames){
-        SharedHelper.putKey(context , "tokens", tokens);
-        SharedHelper.putKey(context , "usernames", usernames);
+    public void getToken(Context context, String tokens, String usernames) {
+        SharedHelper.putKey(context, "tokens", tokens);
+        SharedHelper.putKey(context, "usernames", usernames);
     }
+
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
         restartServiceIntent.setPackage(getPackageName());
         try {
+            Log.e("restart Service", ": restarted");
             startService(restartServiceIntent);
         } catch (Exception e) {
             Log.e("Service", ": Stoped");
@@ -92,7 +96,7 @@ public class ChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        onTaskRemoved(intent);
+//        onTaskRemoved(intent);
 
         return START_STICKY;
     }
@@ -102,12 +106,12 @@ public class ChatService extends Service {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    String role = SharedHelper.getKey(getApplicationContext(), "role");
-                    if (role.equals("Representive") && message.equals("new order added")) {
+//                    String role = SharedHelper.getKey(getApplicationContext(), "role");
+//                    if (role.equals("Representive") && message.equals("new order added")) {
                         biludNotification(message);
-                    } else if (role.equals("WebClient") && message.equals("new offer")) {
-                        biludNotification(message);
-                    }
+//                    } else if (role.equals("WebClient") && message.equals("new offer")) {
+//                        biludNotification(message);
+//                    }
 
                 }
             });
@@ -169,16 +173,20 @@ public class ChatService extends Service {
 
     private boolean StartHubConnection() {
 
+        if(hubStarted){
+            return true;
+        }
+
         hubConnection =
                 HubConnectionBuilder
                         .create("https://test.nileappco.com/chatHub")
                         .withAccessTokenProvider(Single.defer(() -> {
-                            return Single.just(SharedHelper.getKey(getApplicationContext(),"tokens"));
+                            return Single.just(SharedHelper.getKey(getApplicationContext(), "token"));
                             //SharedHelper.getKey(getApplicationContext(),"token");
                         })).build();
         new HubTask().execute(hubConnection);
-
-
+        OnNotificationRecevied();
+        OnRecevied();
         return true;
     }
 
@@ -226,12 +234,12 @@ public class ChatService extends Service {
                 @Override
                 public void run() {
                     Log.e("Qu", "" + message.content);
-                    message.isMine = message.from.equals(SharedHelper.getKey(getApplicationContext(), "usernames")) ? 1 : 0;
-                    int mine = message.isMine;
+//                    message.isMine = message.from.equals(SharedHelper.getKey(getApplicationContext(), "UserName")) ? 1 : 0;
+//                    int mine = message.isMine;
                     String op = SharedHelper.getKey(getApplicationContext(), "opened");
 
                     Globals.Messages.add(message);
-                    if (mine == 0 || op.equals("no")) {
+                    if (message.isMine == 0 && op.equals("no")) {
                         biludNotification("New Message");
                     }
                     sendBroadcast(new Intent().setAction("notifyAdapter"));

@@ -78,7 +78,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.MyViewHo
                 }else{
                     goToDe.putExtra("orderOwner" , mlist.data.get(position).getOwnerName());
                 }
-
+                goToDe.putExtra("repreid" , mlist.data.get(position).getReprestiveId());
                 goToDe.putExtra("orderOwnerID" , mlist.data.get(position).getOwnerId());
                 goToDe.putExtra("orderID" , mlist.data.get(position).getOrderId());
                 goToDe.putExtra("orderTo" , mlist.data.get(position).getToAddress());

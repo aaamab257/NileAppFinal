@@ -62,9 +62,10 @@ public class LoginAuthActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        chatService = new ChatService();
+//        chatService = new ChatService();
+        intent = new Intent(LoginAuthActivity.this, ChatService.class);
         if (SharedHelper.getKey(this, "isLoged").equals("yes")) {
-            Intent intent = new Intent(LoginAuthActivity.this, ChatService.class);
+
             bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
             Intent goo = new Intent(LoginAuthActivity.this, MainActivity.class);
             startActivity(goo);
@@ -74,7 +75,6 @@ public class LoginAuthActivity extends AppCompatActivity {
         handlers = new MyClick(this);
         binding.setHandlers(handlers);
         Log.e("Loged", SharedHelper.getKey(this, "isLoged"));
-
 
     }
 
@@ -129,7 +129,7 @@ public class LoginAuthActivity extends AppCompatActivity {
                                 SharedHelper.putKey(LoginAuthActivity.this, "UserName", response.body().data.user.getUsername());
                                 SharedHelper.putKey(LoginAuthActivity.this, "role", response.body().data.user.getRole());
                                 SharedHelper.putKey(LoginAuthActivity.this, "token", response.body().data.token);
-                                chatService.getToken(LoginAuthActivity.this, response.body().data.token, response.body().data.user.getUsername());
+//                                chatService.getToken(LoginAuthActivity.this, response.body().data.token, response.body().data.user.getUsername());
                                 Log.e("UserNameAfter", SharedHelper.getKey(LoginAuthActivity.this, "UserName"));
                                 SharedHelper.putKey(LoginAuthActivity.this, "name", response.body().data.user.getFullName());
                                 SharedHelper.putKey(LoginAuthActivity.this, "picUrl", response.body().data.user.getPic());
@@ -139,7 +139,7 @@ public class LoginAuthActivity extends AppCompatActivity {
                                     SharedHelper.putKey(LoginAuthActivity.this, "isLoged", "no");
                                 }
                                 dialog.dismiss();
-                                Intent intent = new Intent(LoginAuthActivity.this, ChatService.class);
+
                                 bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
                                 startActivity(open);
                                 LoginAuthActivity.this.finish();
@@ -237,7 +237,7 @@ public class LoginAuthActivity extends AppCompatActivity {
                         //SharedHelper.putKey(LoginAuthActivity.this , "token" , response.body().data.token);
                         SharedHelper.putKey(LoginAuthActivity.this, "name", response.body().data.user.getFullName());
                         SharedHelper.putKey(LoginAuthActivity.this, "picUrl", response.body().data.user.getPic());
-                        Intent intent = new Intent(LoginAuthActivity.this, ChatService.class);
+//                        Intent intent = new Intent(LoginAuthActivity.this, ChatService.class);
                         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
                         startActivity(new Intent(LoginAuthActivity.this, MainActivity.class));
                     }
@@ -296,8 +296,8 @@ public class LoginAuthActivity extends AppCompatActivity {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
-            chatService = binder.getService();
+//            ChatService.LocalBinder binder = (ChatService.LocalBinder) service;
+//            chatService = binder.getService();
             mBound = true;
 
 

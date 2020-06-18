@@ -41,10 +41,11 @@ public class OrderProgress extends AppCompatActivity {
     Intent getDetails;
     ActivityOrderProgressBinding binding;
     MyClick handlers;
-    String otolat, otolng, ofromlat, ofromlng, oname, oid, ownerId;
+    String otolat, otolng, ofromlat, ofromlng, oname, oid, ownerId , repid;
     ProgressDialog dialog;
     int orderID = 0;
     String rule = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,9 @@ public class OrderProgress extends AppCompatActivity {
             binding.nname.setText("المندوب");
             binding.goo.setVisibility(View.GONE);
             binding.lin.setVisibility(View.GONE);
+            binding.btnRatere.setVisibility(View.VISIBLE);
         }else {
+            binding.btnRatere.setVisibility(View.GONE);
             binding.btnRec.setVisibility(View.VISIBLE);
             binding.btnDone.setVisibility(View.VISIBLE);
         }
@@ -80,12 +83,14 @@ public class OrderProgress extends AppCompatActivity {
         ofromlng = getDetails.getStringExtra("orderFromlng");
         oname = getDetails.getStringExtra("orderOwner");
         oid = getDetails.getStringExtra("orderID");
+        repid = getDetails.getStringExtra("repreid");
         orderID = Integer.valueOf(oid);
         ownerId = getDetails.getStringExtra("orderOwnerID");
         binding.orderText.setText(otxt);
         binding.orderAfrom.setText(addfrom);
         binding.orderAto.setText(addto);
         binding.orderOwner.setText(oname);
+
         binding.orderH.setText(oh + "ساعة");
         if (img.isEmpty()) {
             binding.imgOrder.setImageResource(R.drawable.nileapp);
@@ -123,6 +128,9 @@ public class OrderProgress extends AppCompatActivity {
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
+        }
+        public void showrateRepre(View view){
+            ratingAlert();
         }
     }
 
@@ -220,7 +228,28 @@ public class OrderProgress extends AppCompatActivity {
             }
         });
     }
+    private void ratingAlert(){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(OrderProgress.this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.ratealert, null);
+        dialogBuilder.setView(dialogView);
+        AlertDialog alertDialog = dialogBuilder.create();
+        RatingBar rateuser = dialogView.findViewById(R.id.rateUser);
+        Button ok = dialogView.findViewById(R.id.btn_ok);
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int rate = (int) rateuser.getRating();
+                if(rate != 0){
+                    hitRateApi(rate , repid);
+                    alertDialog.cancel();
+                }else {
+                    Toast.makeText(OrderProgress.this, "رجاء قم بتقيم المندوب", Toast.LENGTH_SHORT).show();
+                }
 
+            }
+        });
+    }
     private void showRatingAlert() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(OrderProgress.this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -248,7 +277,6 @@ public class OrderProgress extends AppCompatActivity {
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         alertDialog.show();
     }
-
     private void hitRateApi(int rate) {
         dialog = new ProgressDialog(OrderProgress.this);
         dialog.setMessage(getApplicationContext().getResources().getString(R.string.the_data_is_loaded));
@@ -286,7 +314,43 @@ public class OrderProgress extends AppCompatActivity {
             }
         });
     }
+    private void hitRateApi(int rate , String repreid) {
+        dialog = new ProgressDialog(OrderProgress.this);
+        dialog.setMessage(getApplicationContext().getResources().getString(R.string.the_data_is_loaded));
+        dialog.show();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://test.nileappco.com/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApiInterface userclient = retrofit.create(ApiInterface.class);
+        RateBody body = new RateBody(rate ,ownerId);
+        String token = "Bearer " + SharedHelper.getKey(OrderProgress.this, "token");
+        Call<MainResponse> call = userclient.rateUser(token, body);
+        call.enqueue(new Callback<MainResponse>() {
+            @Override
+            public void onResponse(Call<MainResponse> call, Response<MainResponse> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() != null) {
+                        if (response.body().success) {
+                            Toast.makeText(OrderProgress.this, "تم تقيم العميل", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(OrderProgress.this, "لقد قمت بتقيم العميل من قبل", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                        }
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<MainResponse> call, Throwable t) {
+                Toast.makeText(OrderProgress.this, "خطأ فى الشبكة", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+    }
     private void hitPickedApi() {
         dialog = new ProgressDialog(OrderProgress.this);
         dialog.setMessage(getApplicationContext().getResources().getString(R.string.the_data_is_loaded));

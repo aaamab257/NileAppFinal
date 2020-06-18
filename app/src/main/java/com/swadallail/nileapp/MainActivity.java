@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Circle mCircle;
     Button call, move, chat;
     boolean mBound = false;
-    ChatService chatService ;
     int flagInfo = 0; //فلاق عرض إظهار النافذه التي بالأسف كامل أو إخفائها كامله أثناء كتابة البحث
     int flagMarkerSearch = 0;
     int flagMarkerShow = 0;  //فلاق عرض دبوس البحث لوحده فقط
@@ -1051,7 +1050,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     SharedHelper.putKey(MainActivity.this, "picUrl", "NONE");//isLoged
                     SharedHelper.putKey(MainActivity.this, "isLoged", "no");
                     SharedHelper.putKey(MainActivity.this, "token", "NONE");
-                    chatService = new ChatService() ;
+//                    chatService = new ChatService() ;
                     //chatService.getToken(MainActivity.this, "none" , "none");
 
                     alertDialog.dismiss();
